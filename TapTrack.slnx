@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="TapTrack/TapTrack.Shared/TapTrack.Shared.csproj" />
+  <Project Path="TapTrack/TapTrack.Web/TapTrack.Web.csproj" />
+  <Project Path="TapTrack/TapTrack/TapTrack.csproj" />
+</Solution>
