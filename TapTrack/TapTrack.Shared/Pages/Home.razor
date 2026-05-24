@@ -4,11 +4,24 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Tap Track</h1>
 
-Welcome to your new app running on <em>@factor</em> using <em>@platform</em>.
+Welcome to this app running on <em>@factor</em> using <em>@platform</em>.
+<p role="status">Current timestamp: @timeStamp</p>
+<p>Last clicked button: @lastClicked</p>
+
+<button class="btn btn-primary" @onclick='() => Track("Accept")'>Accept</button>
 
 @code {
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
+
+    private DateTime timeStamp = DateTime.Now;
+    private string? lastClicked;
+
+    private void Track(string text)
+    {
+        lastClicked = text;
+        timeStamp = DateTime.Now;
+    }
 }
