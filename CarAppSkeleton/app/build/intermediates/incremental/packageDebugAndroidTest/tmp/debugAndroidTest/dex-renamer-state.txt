@@ -1,0 +1,4 @@
+#Sun May 24 19:09:05 CDT 2026
+base.0=C\:\\Users\\msteigerwald\\source\\repos\\TapTrack\\CarAppSkeleton\\app\\build\\intermediates\\dex\\debugAndroidTest\\mergeProjectDexDebugAndroidTest\\0\\classes.dex
+path.0=0/classes.dex
+renamed.0=classes.dex

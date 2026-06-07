@@ -1,6 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true"></application>
+    <application android:allowBackup="true" android:icon="@mipmap/appicon" android:roundIcon="@mipmap/appicon_round" android:supportsRtl="true">
+        <!-- Receiver for intents sent from an Android Auto / car app integration.
+             Expected extras: "label" (string), "timestamp" (long ticks or ISO string).
+             Action to send: com.companyname.taptrack.CAR_TAP_ACTION
+
+             NOTE: The CarTapReceiver is registered via the [BroadcastReceiver] attribute on the class
+             so the explicit <receiver> entry was removed to avoid duplicate manifest entries.
+        -->
+    </application>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
