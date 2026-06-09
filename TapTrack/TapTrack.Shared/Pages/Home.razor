@@ -4,15 +4,53 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Tap Track</h1>
+<h3>Home</h3>
 
-Welcome to this app running on <em>@factor</em> using <em>@platform</em>.
-<p role="status">Current timestamp: @timeStamp</p>
-<p>Last clicked button: @lastClicked</p>
+<div class="track-grid" role="group" aria-label="Track buttons">
+    @foreach (var b in Buttons)
+    {
+        <div class="track-cell">
+            <button class="btn btn-@b.Color track-button" @onclick="() => Track(b.Label)">@b.Label</button>
+        </div>
+    }
+</div>
 
-<button class="btn btn-primary" @onclick='() => Track("Accept")'>Accept</button>
+<style>
+    /* Adaptive grid: columns auto-fill and expand to available space */
+    .track-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+        align-items: stretch;
+    }
+
+    /* Each cell is a flex container so the button can stretch to fill it */
+    .track-cell {
+        display: flex;
+    }
+
+    /* Uniform button sizing: full width & height of the grid cell, centered content */
+    .track-button {
+        width: 100%;
+        height: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+    }
+</style>
 
 @code {
+    record ButtonDef(string Label, string Color);
+
+    private readonly ButtonDef[] Buttons = new ButtonDef[]
+    {
+        new ButtonDef("Acceptance", "Green"),
+        new ButtonDef("Resistance",  "Red"),
+        new ButtonDef("Road Rage",   "Red")
+    };
+
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
 
