@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using TapTrack.Shared.Services
-@using System.Net.Http.Json
-@inject HttpClient Http
+@using TapTrack.Shared.Models
+@inject IButtonProvider ButtonProvider
 @inject IFormFactor FormFactor
 
 <PageTitle>Home</PageTitle>
@@ -27,23 +27,15 @@ else
 }
 
 @code {
-    record ButtonDef(string Label, string Color);
-
-    private ButtonDef[] Buttons = Array.Empty<ButtonDef>();
+    private ButtonDefinition[] Buttons = Array.Empty<ButtonDefinition>();
     private bool isLoading = true;
     private string? loadError;
 
     protected override async Task OnInitializedAsync()
     {
-        var defaultButtons = new[]
-        {
-            new ButtonDef("Acceptance", "Green"),
-            new ButtonDef("Resistance", "Red")
-        };
         try
         {
-            // Adjust the endpoint as needed for your API
-            Buttons = await Http.GetFromJsonAsync<ButtonDef[]>("/api/buttons") ?? defaultButtons;
+            Buttons = await ButtonProvider.GetButtonsAsync();
         }
         catch (Exception ex)
         {
