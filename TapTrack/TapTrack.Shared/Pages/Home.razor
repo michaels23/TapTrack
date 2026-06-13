@@ -1,55 +1,59 @@
 ﻿@page "/"
 @using TapTrack.Shared.Services
+@using System.Net.Http.Json
+@inject HttpClient Http
 @inject IFormFactor FormFactor
 
 <PageTitle>Home</PageTitle>
 
 <h3>Home</h3>
 
-<div class="track-grid" role="group" aria-label="Track buttons">
-    @foreach (var b in Buttons)
-    {
-        <div class="track-cell">
-            <button class="btn btn-@b.Color track-button" @onclick="() => Track(b.Label)">@b.Label</button>
-        </div>
-    }
-</div>
-
-<style>
-    /* Adaptive grid: columns auto-fill and expand to available space */
-    .track-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 1rem;
-        align-items: stretch;
-    }
-
-    /* Each cell is a flex container so the button can stretch to fill it */
-    .track-cell {
-        display: flex;
-    }
-
-    /* Uniform button sizing: full width & height of the grid cell, centered content */
-    .track-button {
-        width: 100%;
-        height: 100%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.75rem 1rem;
-        white-space: nowrap;
-    }
-</style>
+@if (isLoading)
+{
+    <p>Loading...</p>
+}
+else if (!string.IsNullOrEmpty(loadError))
+{
+    <p class="text-danger">@loadError</p>
+}
+else
+{
+    <div class="btn-group" role="group" aria-label="Track buttons">
+        @foreach (var b in Buttons)
+        {
+            <button class="btn btn-@b.Color" @onclick="() => Track(b.Label)">@b.Label</button>
+        }
+    </div>
+}
 
 @code {
     record ButtonDef(string Label, string Color);
 
-    private readonly ButtonDef[] Buttons = new ButtonDef[]
+    private ButtonDef[] Buttons = Array.Empty<ButtonDef>();
+    private bool isLoading = true;
+    private string? loadError;
+
+    protected override async Task OnInitializedAsync()
     {
-        new ButtonDef("Acceptance", "Green"),
-        new ButtonDef("Resistance",  "Red"),
-        new ButtonDef("Road Rage",   "Red")
-    };
+        var defaultButtons = new[]
+        {
+            new ButtonDef("Acceptance", "Green"),
+            new ButtonDef("Resistance", "Red")
+        };
+        try
+        {
+            // Adjust the endpoint as needed for your API
+            Buttons = await Http.GetFromJsonAsync<ButtonDef[]>("/api/buttons") ?? defaultButtons;
+        }
+        catch (Exception ex)
+        {
+            loadError = $"Failed to load buttons: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
 
     private string factor => FormFactor.GetFormFactor();
     private string platform => FormFactor.GetPlatform();
